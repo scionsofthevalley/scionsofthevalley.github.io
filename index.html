@@ -1,0 +1,138 @@
+<html>
+<head>
+<style>
+@font-face {
+    font-family: 'AlmendraSC-Regular';
+    src: url("fonts/AlmendraSC-Regular.otf") format("opentype");
+}
+
+body{
+	text-align: center;
+	background: #ffffff;
+  font-weight: 1009;
+  background-image: url('fire.gif');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+h1{
+  font-family: 'AlmendraSC-Regular';
+  color: #888;
+  font-weight: 100;
+  font-size: 100px;
+  margin: 40px 0px 20px;
+}
+
+#clockdiv{
+  font-family: 'AlmendraSC-Regular';
+	color: #fff;
+	display: inline-block;
+	font-weight: 100;
+	text-align: center;
+	font-size: 90px;
+}
+
+#clockdiv > div{
+	padding: 10px;
+	border-radius: 3px;
+	background: #BF0000;
+	display: inline-block;
+}
+
+#clockdiv div > span{
+	padding: 15px;
+	border-radius: 3px;
+	background: #810000;
+	display: inline-block;
+}
+
+.smalltext{
+	padding-top: 5px;
+	font-size: 16px;
+}
+
+.h1{
+}
+</style>
+
+</head>
+
+<body>
+<h1>Next Session</h1>
+<div id="clockdiv">
+  <div>
+    <span class="days"></span>
+    <div class="smalltext">Days</div>
+  </div>
+  <div>
+    <span class="hours"></span>
+    <div class="smalltext">Hours</div>
+  </div>
+  <div>
+    <span class="minutes"></span>
+    <div class="smalltext">Minutes</div>
+  </div>
+  <div>
+    <span class="seconds"></span>
+    <div class="smalltext">Seconds</div>
+  </div>
+</div>
+
+<script>
+function getTimeRemaining(endtime) {
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  var seconds = Math.floor((t / 1000) % 60);
+  var minutes = Math.floor((t / 1000 / 60) % 60);
+  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+  var days = Math.floor(t / (1000 * 60 * 60 * 24));
+  return {
+    'total': t,
+    'days': days,
+    'hours': hours,
+    'minutes': minutes,
+    'seconds': seconds
+  };
+}
+
+function getNextDayOfWeek(date, dayOfWeek) {
+    // Code to check that date and dayOfWeek are valid left as an exercise ;)
+
+    var resultDate = new Date(date.getTime());
+
+    resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
+
+    return resultDate;
+}
+
+function initializeClock(id, endtime) {
+  var clock = document.getElementById(id);
+  var daysSpan = clock.querySelector('.days');
+  var hoursSpan = clock.querySelector('.hours');
+  var minutesSpan = clock.querySelector('.minutes');
+  var secondsSpan = clock.querySelector('.seconds');
+
+  function updateClock() {
+    var t = getTimeRemaining(endtime);
+
+    daysSpan.innerHTML = t.days;
+    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+    if (t.total <= 0) {
+      clearInterval(timeinterval);
+    }
+  }
+
+  updateClock();
+  var timeinterval = setInterval(updateClock, 1000);
+}
+
+//var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+var nextSession = new Date(Date.parse('04 Aug 2019 16:00:00 EST'));
+var nextSession = getNextDayOfWeek(new Date(),0);
+nextSession.setHours(16,0,0);
+initializeClock('clockdiv', nextSession);
+</script>
+</body>
+</html>
